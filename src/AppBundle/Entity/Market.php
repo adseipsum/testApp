@@ -38,7 +38,7 @@ class Market
     /**
      * @var string
      *
-     * @ORM\Column(name="market_index", type="string", length=50)
+     * @ORM\Column(name="market_index", type="float")
      */
     private $marketIndex;
 

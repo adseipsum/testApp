@@ -127,37 +127,15 @@ class DefaultController extends Controller
             $infoUrl = 'http://www.google.com/finance/info?client=ig&q='.$key;
             //get contents, remove //
             $infoObj = str_replace('//','',file_get_contents($infoUrl));
+
             if($infoObj){
                 //clean control chars and convert to asc array
                 $infoObj = json_decode(utf8_encode($infoObj),true);
 
-                /*"id": "338568" - internal google security id
-                ,"t" : "IDX" - stock symbol
-                ,"e" : "NYSEARCA" - exchange name
-                ,"l" : "19.72" - last trade price
-                ,"l_fix" : "19.72" - last trade ?
-                ,"l_cur" : "19.72" - last trade with currency
-                ,"s": "0" - last trade size
-                ,"ltt":"3:59PM EDT" - last trade time
-                ,"lt" : "May 4, 3:59PM EDT"  - last trade date time long
-                ,"lt_dts" : "2016-05-04T15:59:59Z" - last trade date time
-                ,"c" : "-0.31" - change
-                ,"c_fix" : "-0.31" - ?
-                ,"cp" : "-1.55" - ? percentage
-                ,"cp_fix" : "-1.55" - ?
-                ,"ccol" : "chr" - ?
-                ,"pcls_fix" : "20.03" - previous close price
-                */
-
-                $stock = $infoObj[0]['t'];
                 $exchange = $infoObj[0]['e'];
-                $code = $stock.':'.$exchange;
                 $cPercentage = $infoObj[0]['cp'];//this is the percentage, which is basically just comparing the change between the end of the last day, and the most recent transaction
-                $cAmount = $infoObj[0]['c'];
                 $prevClosePrice = floatval(str_replace(',','',$infoObj[0]['pcls_fix']));
                 $lastTradePrice = floatval(str_replace(',','',$infoObj[0]['l']));
-                $lastTradePriceCur = $infoObj[0]['l_cur'];
-                $lastTradeDate = $infoObj[0]['lt'];
 
                 //mean
                 $mean = ($prevClosePrice+$lastTradePrice)/2;
@@ -207,7 +185,6 @@ class DefaultController extends Controller
     }
 
     protected function sendEmail($records){
-
         $encoders = array(new XmlEncoder());
         $normalizers = array(new ObjectNormalizer());
 
@@ -219,15 +196,12 @@ class DefaultController extends Controller
         $fs = new Filesystem();
         $fs->dumpFile($path, $xml);
 
-        $transporter = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-            ->setUsername('oleksiy.perepelytsya@gmail.com')
-            ->setPassword('euncooqwboymjeks');
-
-        $mailer = \Swift_Mailer::newInstance($transporter);
+        $mailer = $this->container->get('swiftmailer.mailer');
 
         $message = (new \Swift_Message('Hello Email'))
-            ->setFrom('callmeanaguma@gmail.com')
-            ->setTo('oleksiy.perepelytsya@gmail.com')
+            ->setFrom('oleksiy.perepelytsya@gmail.com')
+            ->setTo('sandis@monify.lv')
+            ->setCc('eyyub@learn-solve.com')
             ->setBody(
                 $this->render(
                 // app/Resources/views/Emails/information.html.twig
