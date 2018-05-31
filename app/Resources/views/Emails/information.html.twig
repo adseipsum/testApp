@@ -1,0 +1,14 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>Market</th>
+        <th>Value</th>
+        <th>Index</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for key, value in records %}
+            <tr><td>{{ value.getName() }}</td><td>{{ value.getValue() }}</td><td>{{ value.getIndex() }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

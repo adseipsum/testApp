@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div class="container">
+            <div>
+                <div class="list-group">
+                    <a href="extract-markets" class="list-group-item">Extract Markets</a>
+                    <a href="extract-indexes" class="list-group-item">Extract Indexes</a>
+                    <a href="send-xml" class="list-group-item">Send XML</a>
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Market</th>
+                        <th>Value</th>
+                        <th>Index</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, value in records %}
+                        <tr><td>{{ value.getName() }}</td><td>{{ value.getValue() }}</td><td>{{ value.getIndex() }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
+
+{% block javascripts %}
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock %}
